@@ -2,6 +2,9 @@ const {Builder, By, Key, until} = require('selenium-webdriver');
 
 const csv = require('csv-parser');
 const fs = require('fs');
+const { config } = require('process');
+
+const {diccionario} = require('./config/diccionario');
 
 (async function example() {
     let driver
@@ -35,21 +38,31 @@ const fs = require('fs');
                 await driver.findElement(By.id('enviar')).click();
 
                 let index = await driver.getPageSource();
-
-                let atenderlo = await (index.indexOf("En estos momentos no podemos atenderlo, inténtelo más tarde."))
+               
+                let atenderlo = await (index.indexOf( diccionario.NoPodemosAtenderlo.value ))
                 if( atenderlo != -1){
-                    console.log("no se peude atender")
+                    console.log("no se peude atender en este momento")
                 }
-                else{
-                    console.log("no corresponde el mensaje")
+
+
+                let clave = await (index.indexOf( diccionario.ClaveValida.value ))
+                if( clave != -1 ){
+                    //hacer algo aca
+                    console.log("otro caso")
                 }
+                
 
                 await new Promise(resolve => setTimeout(resolve, 30000))
                 }
             }
             catch(err)
             {
-                console.log(err)
+                //CONTROLAR ERROR DE RUT VALIDO
+                console.log( err.stack.indexOf(  diccionario.ErrorRut.value ) )
+                if( err.stack.indexOf(  diccionario.ErrorRut.value ) != -1 ){
+                    //ACA CAPTURASTE QUE ES UN ERROR DE RUT
+                }
+                //console.log(err)
             } 
         }        
     }
