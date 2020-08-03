@@ -21,6 +21,7 @@ const fs = require('fs');
         await new Promise(resolve => setTimeout(resolve, 3000))
        // ruts.map(rut => rut.replace(";",""))
         driver = await new Builder().forBrowser('chrome').build();
+        //driver.manage().window().setSize(new Dimension(100,100)); 
         // Enter text "cheese" and perform keyboard action "Enter"
         for(let rut of ruts)
         {
@@ -32,7 +33,18 @@ const fs = require('fs');
                 await driver.findElement(By.id('username')).sendKeys(rut);
                 await driver.findElement(By.id('password')).sendKeys('1234');
                 await driver.findElement(By.id('enviar')).click();
-                await new Promise(resolve => setTimeout(resolve, 3000))
+
+                let index = await driver.getPageSource();
+
+                let atenderlo = await (index.indexOf("En estos momentos no podemos atenderlo, inténtelo más tarde."))
+                if( atenderlo != -1){
+                    console.log("no se peude atender")
+                }
+                else{
+                    console.log("no corresponde el mensaje")
+                }
+
+                await new Promise(resolve => setTimeout(resolve, 30000))
                 }
             }
             catch(err)
