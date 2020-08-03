@@ -23,8 +23,10 @@ const {diccionario} = require('./config/diccionario');
         });  
         await new Promise(resolve => setTimeout(resolve, 3000))
        // ruts.map(rut => rut.replace(";",""))
+        
         driver = await new Builder().forBrowser('chrome').build();
-        //driver.manage().window().setSize(new Dimension(100,100)); 
+        await driver.manage().window().setRect({ width: 100, height: 600 });
+
         // Enter text "cheese" and perform keyboard action "Enter"
         for(let rut of ruts)
         {
